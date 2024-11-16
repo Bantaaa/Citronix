@@ -93,4 +93,25 @@ databaseChangeLog:
             constraintName: FK_TREE_ON_FARM
             referencedColumnNames: id
             referencedTableName: farm
-
+  - changeSet:
+      id: 1731739679552-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: farm
+  - changeSet:
+      id: 1731743413948-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: date_established
+                  type: DATE
+            tableName: farm

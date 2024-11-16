@@ -1,18 +1,12 @@
 package org.banta.citronix.service;
 
-import org.banta.citronix.domain.Farm;
-import org.banta.citronix.repository.FarmRepository;
-import org.springframework.stereotype.Service;
+import org.banta.citronix.dto.FarmDTO;
+import java.util.List;
+import java.util.UUID;
 
-@Service
-public class FarmService {
-    private FarmRepository farmRepository;
-
-    public FarmService(FarmRepository farmRepository) {
-        this.farmRepository = farmRepository;
-    }
-
-    public Farm save(Farm farm) {
-        return farmRepository.save(farm);
-    }
+public interface FarmService {
+    FarmDTO save(FarmDTO farmDTO);
+    FarmDTO update(FarmDTO farmDTO);
+    void deleteById(UUID id);
+    List<FarmDTO> findAll();
 }

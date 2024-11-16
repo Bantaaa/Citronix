@@ -1,5 +1,6 @@
 package org.banta.citronix.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import java.util.List;
 
@@ -9,5 +10,6 @@ public class FarmDTO {
     private String location;
     private Float area;
     private String dateEstablished;
+    @JsonIgnore
     private List<FieldDTO> fields;
 }

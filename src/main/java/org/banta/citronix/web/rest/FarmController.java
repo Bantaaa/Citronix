@@ -1,6 +1,5 @@
 package org.banta.citronix.web.rest;
 
-import org.banta.citronix.domain.Farm;
 import org.banta.citronix.dto.FarmDTO;
 import org.banta.citronix.service.FarmService;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +18,13 @@ public class FarmController {
         this.farmService = farmService;
     }
 
-    @PostMapping
-    public ResponseEntity<FarmDTO> save(@RequestBody FarmDTO farmDTO) {
+    @PostMapping("/create")
+    public ResponseEntity<FarmDTO> createFarm(@RequestBody FarmDTO farmDTO) {
         return ResponseEntity.ok(farmService.save(farmDTO));
     }
 
-    @PutMapping
-    public ResponseEntity<FarmDTO> update(@RequestBody FarmDTO farmDTO) {
+    @PutMapping("/update")
+    public ResponseEntity<FarmDTO> updateFarm(@RequestBody FarmDTO farmDTO) {
         return ResponseEntity.ok(farmService.update(farmDTO));
     }
 
@@ -35,8 +34,8 @@ public class FarmController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<FarmDTO>> getAll() {
+    @GetMapping("/all")
+    public ResponseEntity<List<FarmDTO>> getAllFarms() {
         return ResponseEntity.ok(farmService.findAll());
     }
 

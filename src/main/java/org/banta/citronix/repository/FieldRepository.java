@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FieldRepository extends JpaRepository<Field, UUID> {
-    List<Field> findByFarmId(UUID FarmId);
+
+    @Query("SELECT f FROM Field f WHERE f.farm.id = :farmId")
+    List<Field> findByFarmId(@Param("farmId") UUID farmId);
 
     @Query("SELECT SUM(f.area) FROM Field f WHERE f.farm.id = :farmId")
     Float sumAreaByFarmId(@Param("farmId") UUID farmId);

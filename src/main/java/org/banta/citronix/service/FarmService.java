@@ -8,5 +8,5 @@ public interface FarmService {
     FarmDTO save(FarmDTO farmDTO);
     FarmDTO update(FarmDTO farmDTO);
     void deleteById(UUID id);
-    List<FarmDTO> findAll();
+    FarmDTO getFarmDetails(UUID id);
 }

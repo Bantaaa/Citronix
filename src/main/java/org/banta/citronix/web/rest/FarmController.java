@@ -34,9 +34,9 @@ public class FarmController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<FarmDTO>> getAllFarms() {
-        return ResponseEntity.ok(farmService.findAll());
+    @GetMapping("/details/{id}")
+    public ResponseEntity<FarmDTO> getFarmDetails(@PathVariable UUID id) {
+        return ResponseEntity.ok(farmService.getFarmDetails(id));
     }
 
 }

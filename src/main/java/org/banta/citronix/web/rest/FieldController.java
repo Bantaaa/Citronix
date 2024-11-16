@@ -29,9 +29,9 @@ public class FieldController {
         return ResponseEntity.ok(fieldService.getFieldById(id));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<FieldDTO>> getAllFields() {
-        return ResponseEntity.ok(fieldService.getAllFields());
+    @GetMapping("/farm/{farmId}")
+    public ResponseEntity<List<FieldDTO>> getFieldsByFarmId(@PathVariable UUID farmId) {
+        return ResponseEntity.ok(fieldService.getAllFieldsByFarmId(farmId));
     }
 
     @PutMapping("/update/{id}")

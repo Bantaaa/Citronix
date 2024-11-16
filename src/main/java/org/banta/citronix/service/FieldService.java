@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface FieldService {
     FieldDTO saveField(CreateFieldRequest createFieldRequest);
     FieldDTO getFieldById(UUID id);
-    List<FieldDTO> getAllFields();
+    List<FieldDTO> getAllFieldsByFarmId(UUID farmId);
     FieldDTO updateField(UUID id, UpdateFieldRequest updateFieldRequest);
     void deleteField(UUID id);
 //    boolean isFieldAvailableForHarvest(Long fieldId, Season season);

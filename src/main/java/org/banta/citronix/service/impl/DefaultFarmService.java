@@ -6,6 +6,7 @@ import org.banta.citronix.dto.farm.FarmDTO;
 import org.banta.citronix.mapper.FarmMapper;
 import org.banta.citronix.repository.FarmRepository;
 import org.banta.citronix.service.FarmService;
+import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,11 +42,14 @@ public class DefaultFarmService implements FarmService {
         farmRepository.deleteById(id);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<FarmDTO> findAll() {
-        return farmRepository.findAll().stream()
-                .map(farmMapper::toDto)
-                .toList();  // Using toList() instead of collect(Collectors.toList())
+
+    public FarmDTO getFarmDetails(UUID id) {
+        Farm farm = farmRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Farm not found with id: %s", id)
+                ));
+        return farmMapper.toDto(farm);
     }
+
+
 }

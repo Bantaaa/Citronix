@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -58,10 +60,11 @@ public class DefaultFieldService implements FieldService {
     }
 
     @Transactional(readOnly = true)
-    public List<FieldDTO> getAllFields() {
-        return fieldRepository.findAll().stream()
+    public List<FieldDTO> getAllFieldsByFarmId(UUID farmId) {
+        List<Field> fields = fieldRepository.findByFarmId(farmId);
+        return fields.stream()
                 .map(fieldMapper::toDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public FieldDTO updateField(UUID id, UpdateFieldRequest request) {

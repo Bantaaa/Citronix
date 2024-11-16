@@ -1,6 +1,7 @@
 package org.banta.citronix.web.rest;
 
 import org.banta.citronix.dto.farm.FarmDTO;
+import org.banta.citronix.dto.farm.FarmSearchCriteria;
 import org.banta.citronix.service.FarmService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,25 @@ public class FarmController {
     @GetMapping("/details/{id}")
     public ResponseEntity<FarmDTO> getFarmDetails(@PathVariable UUID id) {
         return ResponseEntity.ok(farmService.getFarmDetails(id));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<?> searchFarms(@RequestBody FarmSearchCriteria criteria) {
+        if (isEmpty(criteria)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("At least one search criterion must be provided");
+        }
+        return ResponseEntity.ok(farmService.searchFarms(criteria));
+    }
+
+    private boolean isEmpty(FarmSearchCriteria criteria) {
+        return (criteria.getName() == null || criteria.getName().trim().isEmpty()) &&
+                (criteria.getLocation() == null || criteria.getLocation().trim().isEmpty()) &&
+                criteria.getMinArea() == null &&
+                criteria.getMaxArea() == null &&
+                criteria.getEstablishedAfter() == null &&
+                criteria.getEstablishedBefore() == null;
     }
 
 }

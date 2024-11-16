@@ -3,9 +3,11 @@ package org.banta.citronix.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Farm;
 import org.banta.citronix.dto.farm.FarmDTO;
+import org.banta.citronix.dto.farm.FarmSearchCriteria;
 import org.banta.citronix.mapper.FarmMapper;
 import org.banta.citronix.repository.FarmRepository;
 import org.banta.citronix.service.FarmService;
+import org.banta.citronix.specification.FarmSpecifications;
 import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,14 @@ public class DefaultFarmService implements FarmService {
                         String.format("Farm not found with id: %s", id)
                 ));
         return farmMapper.toDto(farm);
+    }
+
+    @Transactional(readOnly = true)
+    public List<FarmDTO> searchFarms(FarmSearchCriteria criteria) {
+        return farmRepository.findAll(FarmSpecifications.withCriteria(criteria))
+                .stream()
+                .map(farmMapper::toDto)
+                .toList();
     }
 
 

@@ -13,4 +13,6 @@ public class Tree {
     private LocalDate datePlanted;
     @ManyToOne
     private Farm farm;
+    @ManyToOne
+    private Field field;
 }

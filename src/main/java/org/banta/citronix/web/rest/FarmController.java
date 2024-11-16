@@ -18,4 +18,15 @@ public class FarmController {
     public Farm save(@RequestBody Farm farm) {
         return farmService.save(farm);
     }
+
+    @PutMapping("/update")
+    public Farm update(@RequestBody Farm farm) {
+        return farmService.update(farm);
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(@RequestBody Farm farm) {
+        farmService.delete(farm);
+    }
+
 }

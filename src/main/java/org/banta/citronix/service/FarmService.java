@@ -15,4 +15,12 @@ public class FarmService {
     public Farm save(Farm farm) {
         return farmRepository.save(farm);
     }
+
+    public Farm update(Farm farm) {
+        return farmRepository.save(farm);
+    }
+
+    public void delete(Farm farm) {
+        farmRepository.delete(farm);
+    }
 }

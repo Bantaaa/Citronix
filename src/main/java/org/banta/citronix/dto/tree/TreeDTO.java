@@ -1,4 +1,4 @@
-package org.banta.citronix.dto;
+package org.banta.citronix.dto.tree;
 
 import lombok.Data;
 

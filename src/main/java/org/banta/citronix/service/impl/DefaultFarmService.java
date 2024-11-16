@@ -2,7 +2,7 @@ package org.banta.citronix.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Farm;
-import org.banta.citronix.dto.FarmDTO;
+import org.banta.citronix.dto.farm.FarmDTO;
 import org.banta.citronix.mapper.FarmMapper;
 import org.banta.citronix.repository.FarmRepository;
 import org.banta.citronix.service.FarmService;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FarmServiceImpl implements FarmService {
+public class DefaultFarmService implements FarmService {
     private final FarmRepository farmRepository;
     private final FarmMapper farmMapper;
 

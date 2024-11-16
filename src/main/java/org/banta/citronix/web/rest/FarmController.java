@@ -1,6 +1,6 @@
 package org.banta.citronix.web.rest;
 
-import org.banta.citronix.dto.FarmDTO;
+import org.banta.citronix.dto.farm.FarmDTO;
 import org.banta.citronix.service.FarmService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

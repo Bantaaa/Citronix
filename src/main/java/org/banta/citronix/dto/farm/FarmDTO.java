@@ -1,7 +1,9 @@
-package org.banta.citronix.dto;
+package org.banta.citronix.dto.farm;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.banta.citronix.dto.field.FieldDTO;
+
 import java.util.List;
 
 @Data

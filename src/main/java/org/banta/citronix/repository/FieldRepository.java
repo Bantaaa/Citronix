@@ -18,4 +18,5 @@ public interface FieldRepository extends JpaRepository<Field, UUID> {
     Float sumAreaByFarmId(@Param("farmId") UUID farmId);
 
     Long countByFarmId(UUID farmId);
+
 }

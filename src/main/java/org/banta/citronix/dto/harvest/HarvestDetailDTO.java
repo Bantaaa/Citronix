@@ -2,14 +2,16 @@ package org.banta.citronix.dto.harvest;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class HarvestDetailDTO {
-    private Long id;
-    private Long harvestId;
-    private Long treeId;
+    private UUID id;
+    private UUID harvestId;
+    private UUID treeId;
     private Double quantity;
 
     // Additional fields for better context in responses

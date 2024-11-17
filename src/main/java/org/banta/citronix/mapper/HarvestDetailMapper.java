@@ -10,10 +10,12 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface HarvestDetailMapper {
     @Mapping(source = "tree.id", target = "treeId")
+    @Mapping(source = "harvest.id", target = "harvestId")
     HarvestDetailDTO toDto(HarvestDetail harvestDetail);
 
     @Mapping(source = "treeId", target = "tree.id")
-    HarvestDetail toEntity(HarvestDetailDTO harvestDetailDTO);
+    @Mapping(source = "harvestId", target = "harvest.id")
+    HarvestDetail toEntity(HarvestDetailDTO dto);
 
-    List<HarvestDetailDTO> toDtoList(List<HarvestDetail> harvestDetails);
+    List<HarvestDetailDTO> toDtoList(List<HarvestDetail> details);
 }

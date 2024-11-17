@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +27,7 @@ public class Tree {
     @NotNull(message = "Field is required")
     private Field field;
 
-    @OneToMany
-    private List<HarvestDetail> harvests;
+    @OneToMany(mappedBy = "tree")
+    @Builder.Default
+    private List<HarvestDetail> harvests = new ArrayList<>();
 }

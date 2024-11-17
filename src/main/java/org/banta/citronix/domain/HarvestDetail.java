@@ -10,6 +10,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class HarvestDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

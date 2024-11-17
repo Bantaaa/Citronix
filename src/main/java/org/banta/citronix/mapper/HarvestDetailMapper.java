@@ -9,8 +9,8 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface HarvestDetailMapper {
-    @Mapping(source = "tree.id", target = "treeId")
     @Mapping(source = "harvest.id", target = "harvestId")
+    @Mapping(source = "tree.id", target = "treeId")
     HarvestDetailDTO toDto(HarvestDetail harvestDetail);
 
     @Mapping(source = "treeId", target = "tree.id")

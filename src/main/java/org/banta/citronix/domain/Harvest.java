@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.banta.citronix.domain.enums.Season;
 
 import java.time.LocalDate;
@@ -15,6 +15,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Harvest {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

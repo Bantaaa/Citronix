@@ -69,10 +69,12 @@ public class DefaultTreeService implements TreeService {
         Field field = fieldRepository.findById(request.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException("Field not found with id: " + request.getFieldId()));
 
-//        if (!canAddTreeToField(field.getId()) || isValidPlantingDate(request.getDatePlanted()))
-//            throw new BadRequestException("Invalid tree creation conditions");
+        Tree tree = Tree.builder()
+                .datePlanted(request.getDatePlanted())
+                .field(field)
+                .build();
 
-        Tree tree = treeRepository.save(new Tree(null, request.getDatePlanted(), field));
+        tree = treeRepository.save(tree);
         Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
 
         return TreeResponseDTO.builder()

@@ -20,5 +20,5 @@ public interface TreeService {
     Double calculateProductivity(Long age);
     String determineStatus(Long age);
     boolean isValidPlantingDate(LocalDate plantingDate);
-    boolean canAddTreeToField(UUID fieldId); // Check density constraint
+//    boolean canAddTreeToField(UUID fieldId); // Check density constraint
 }

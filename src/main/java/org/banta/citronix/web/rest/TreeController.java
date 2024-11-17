@@ -20,12 +20,12 @@ import java.util.UUID;
 public class TreeController {
     private final TreeService treeService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<TreeResponseDTO> createTree(@Valid @RequestBody TreeRequestDTO request) {
         return new ResponseEntity<>(treeService.createTree(request), HttpStatus.CREATED);
     }
 
-    @GetMapping("/create/{id}")
+    @GetMapping("/read/{id}")
     public ResponseEntity<TreeResponseDTO> getTreeById(@PathVariable UUID id) {
         return ResponseEntity.ok(treeService.getTreeById(id));
     }
@@ -36,9 +36,7 @@ public class TreeController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<TreeResponseDTO> updateTree(
-            @PathVariable UUID id,
-            @Valid @RequestBody TreeRequestDTO request) {
+    public ResponseEntity<TreeResponseDTO> updateTree(@PathVariable UUID id, @Valid @RequestBody TreeRequestDTO request) {
         return ResponseEntity.ok(treeService.updateTree(id, request));
     }
 

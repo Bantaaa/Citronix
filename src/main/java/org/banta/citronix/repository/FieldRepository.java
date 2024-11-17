@@ -19,6 +19,4 @@ public interface FieldRepository extends JpaRepository<Field, UUID> {
 
     Long countByFarmId(UUID farmId);
 
-    @Query("SELECT COUNT(f) FROM Field f WHERE f.farm.id = :farmId")
-    Long countByFieldId(UUID fieldId);
 }

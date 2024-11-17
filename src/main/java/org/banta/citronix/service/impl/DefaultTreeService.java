@@ -1,7 +1,5 @@
 package org.banta.citronix.service.impl;
 
-import jakarta.transaction.Transactional;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Field;
 import org.banta.citronix.domain.Tree;
@@ -35,12 +33,12 @@ public class DefaultTreeService implements TreeService {
         treeRepository.delete(tree);
     }
 
-    public boolean canAddTreeToField(UUID fieldId) {
-        return fieldRepository.countByFieldId(fieldId) < 100;
-    }
+//    public boolean canAddTreeToField(UUID fieldId) {
+//        return fieldRepository.countByFieldId(fieldId) < 100;
+//    }
 
     public boolean isValidPlantingDate(LocalDate plantingDate) {
-        return plantingDate.isBefore(LocalDate.now());
+        return !plantingDate.isBefore(LocalDate.now());
     }
 
     public String determineStatus(Long age) {
@@ -71,8 +69,8 @@ public class DefaultTreeService implements TreeService {
         Field field = fieldRepository.findById(request.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException("Field not found with id: " + request.getFieldId()));
 
-        if (!canAddTreeToField(field.getId()) || !isValidPlantingDate(request.getDatePlanted()))
-            throw new BadRequestException("Invalid tree creation conditions");
+//        if (!canAddTreeToField(field.getId()) || isValidPlantingDate(request.getDatePlanted()))
+//            throw new BadRequestException("Invalid tree creation conditions");
 
         Tree tree = treeRepository.save(new Tree(null, request.getDatePlanted(), field));
         Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
@@ -114,7 +112,7 @@ public class DefaultTreeService implements TreeService {
                         String.format("Tree not found with id: %s", id)
                 ));
 
-        if (!isValidPlantingDate(request.getDatePlanted()))
+        if (isValidPlantingDate(request.getDatePlanted()))
             throw new BadRequestException("Invalid tree update conditions");
 
         tree.setDatePlanted(request.getDatePlanted());

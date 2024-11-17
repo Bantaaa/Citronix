@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,4 +25,7 @@ public class Tree {
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Field is required")
     private Field field;
+
+    @OneToMany
+    private List<HarvestDetail> harvests;
 }

@@ -2,10 +2,13 @@ package org.banta.citronix.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Farm;
-import org.banta.citronix.dto.FarmDTO;
+import org.banta.citronix.dto.farm.FarmDTO;
+import org.banta.citronix.dto.farm.FarmSearchCriteria;
 import org.banta.citronix.mapper.FarmMapper;
 import org.banta.citronix.repository.FarmRepository;
 import org.banta.citronix.service.FarmService;
+import org.banta.citronix.specification.FarmSpecifications;
+import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +18,7 @@ import java.util.UUID;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class FarmServiceImpl implements FarmService {
+public class DefaultFarmService implements FarmService {
     private final FarmRepository farmRepository;
     private final FarmMapper farmMapper;
 
@@ -41,11 +44,22 @@ public class FarmServiceImpl implements FarmService {
         farmRepository.deleteById(id);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<FarmDTO> findAll() {
-        return farmRepository.findAll().stream()
-                .map(farmMapper::toDto)
-                .toList();  // Using toList() instead of collect(Collectors.toList())
+
+    public FarmDTO getFarmDetails(UUID id) {
+        Farm farm = farmRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Farm not found with id: %s", id)
+                ));
+        return farmMapper.toDto(farm);
     }
+
+    @Transactional(readOnly = true)
+    public List<FarmDTO> searchFarms(FarmSearchCriteria criteria) {
+        return farmRepository.findAll(FarmSpecifications.withCriteria(criteria))
+                .stream()
+                .map(farmMapper::toDto)
+                .toList();
+    }
+
+
 }

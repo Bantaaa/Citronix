@@ -1,21 +1,29 @@
 package org.banta.citronix.mapper;
 
 import org.banta.citronix.domain.HarvestDetail;
+import org.banta.citronix.domain.Tree;
 import org.banta.citronix.dto.harvest.HarvestDetailDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring")
 public interface HarvestDetailMapper {
-    @Mapping(source = "harvest.id", target = "harvestId")
     @Mapping(source = "tree.id", target = "treeId")
-    HarvestDetailDTO toDto(HarvestDetail harvestDetail);
+    @Mapping(source = "harvest.id", target = "harvestId")
+    HarvestDetailDTO toDto(HarvestDetail detail);
 
-    @Mapping(source = "treeId", target = "tree.id")
-    @Mapping(source = "harvestId", target = "harvest.id")
+    @Mapping(target = "tree", expression = "java(createTreeRef(dto.getTreeId()))")
+    @Mapping(target = "harvest", ignore = true)
     HarvestDetail toEntity(HarvestDetailDTO dto);
 
     List<HarvestDetailDTO> toDtoList(List<HarvestDetail> details);
+
+    default Tree createTreeRef(UUID id) {
+        if (id == null) return null;
+        Tree tree = new Tree();
+        tree.setId(id);
+        return tree;
+    }
 }

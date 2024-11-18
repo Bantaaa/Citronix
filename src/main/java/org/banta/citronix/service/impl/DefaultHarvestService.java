@@ -2,6 +2,7 @@ package org.banta.citronix.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Harvest;
+import org.banta.citronix.domain.HarvestDetail;
 import org.banta.citronix.dto.harvest.HarvestDTO;
 import org.banta.citronix.dto.harvest.HarvestDetailDTO;
 import org.banta.citronix.mapper.HarvestMapper;
@@ -24,19 +25,28 @@ public class DefaultHarvestService implements HarvestService {
 
     @Override
     public HarvestDTO createHarvest(HarvestDTO harvestDTO) {
-        if (!existsBySeasonAndYear(harvestDTO)) {
+        if (existsBySeasonAndYear(harvestDTO)) {
             throw new BadRequestException("A harvest for this season already exists");
         }
 
-        if (!existsBySeasonAndYear(harvestDTO)) {
+        if (isTreeHarvestedInSeason(harvestDTO)) {
             throw new BadRequestException("Some trees have already been harvested this season");
         }
 
         Harvest harvest = harvestMapper.toEntity(harvestDTO);
+
+        // Calculate total quantity
+        if (harvest.getHarvestDetails() != null) {
+            double totalQuantity = harvest.getHarvestDetails().stream()
+                    .mapToDouble(HarvestDetail::getQuantity)
+                    .sum();
+            harvest.setTotalQuantity(totalQuantity);
+        }
+
         harvest = harvestRepository.save(harvest);
         return harvestMapper.toDto(harvest);
     }
-
+    
     @Override
     public HarvestDTO updateHarvest(HarvestDTO harvestDTO) {
         if (!harvestRepository.existsById(harvestDTO.getId())) {

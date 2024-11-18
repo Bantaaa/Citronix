@@ -15,6 +15,5 @@ public class HarvestDTO {
     private Season season;
     private LocalDate harvestDate;
     private Double totalQuantity;
-    private Long fieldId;
     private List<HarvestDetailDTO> harvestDetails;
 }

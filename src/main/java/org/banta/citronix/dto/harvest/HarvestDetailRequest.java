@@ -11,8 +11,6 @@ import java.util.UUID;
 public class HarvestDetailRequest {
     @NotNull(message = "Tree ID is required")
     private UUID treeId;
-
     @NotNull(message = "Quantity is required")
-    @Positive(message = "Quantity must be positive")
     private Double quantity;
 }

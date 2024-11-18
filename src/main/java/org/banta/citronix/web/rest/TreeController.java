@@ -25,7 +25,7 @@ public class TreeController {
         return new ResponseEntity<>(treeService.createTree(request), HttpStatus.CREATED);
     }
 
-    @GetMapping("/read/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<TreeResponseDTO> getTreeById(@PathVariable UUID id) {
         return ResponseEntity.ok(treeService.getTreeById(id));
     }

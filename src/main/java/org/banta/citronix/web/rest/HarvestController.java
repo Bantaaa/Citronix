@@ -3,7 +3,6 @@ package org.banta.citronix.web.rest;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.dto.harvest.HarvestDTO;
 import org.banta.citronix.dto.harvest.HarvestDetailDTO;
-import org.banta.citronix.dto.harvest.HarvestDetailRequest;
 import org.banta.citronix.domain.enums.Season;
 import org.banta.citronix.service.HarvestService;
 import org.springframework.http.ResponseEntity;

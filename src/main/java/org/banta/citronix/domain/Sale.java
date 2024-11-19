@@ -7,9 +7,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
+@Builder
 @RequiredArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
 public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

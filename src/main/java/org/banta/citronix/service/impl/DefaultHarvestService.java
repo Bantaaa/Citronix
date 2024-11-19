@@ -72,7 +72,6 @@ public class DefaultHarvestService implements HarvestService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public HarvestDTO getHarvestById(UUID harvestId) {
         return harvestRepository.findById(harvestId)
                 .map(harvestMapper::toDto)

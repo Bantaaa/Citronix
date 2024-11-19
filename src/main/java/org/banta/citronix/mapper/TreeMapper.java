@@ -1,11 +1,11 @@
 package org.banta.citronix.mapper;
 
 import org.banta.citronix.domain.Tree;
-import org.banta.citronix.dto.tree.TreeRequestDTO;
+import org.banta.citronix.dto.tree.TreeDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TreeMapper {
-    TreeRequestDTO toDto(Tree tree);
-    Tree toEntity(TreeRequestDTO treeDTO);
+    TreeDTO toDto(Tree tree);
+    Tree toEntity(TreeDTO treeDTO);
 }

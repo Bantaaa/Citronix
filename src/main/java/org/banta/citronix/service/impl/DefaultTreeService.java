@@ -1,16 +1,17 @@
 package org.banta.citronix.service.impl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Field;
 import org.banta.citronix.domain.Tree;
-import org.banta.citronix.dto.tree.TreeRequestDTO;
-import org.banta.citronix.dto.tree.TreeResponseDTO;
+import org.banta.citronix.dto.tree.TreeDTO;
 import org.banta.citronix.repository.FieldRepository;
 import org.banta.citronix.repository.TreeRepository;
 import org.banta.citronix.web.errors.exception.BadRequestException;
 import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.banta.citronix.service.TreeService;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -24,48 +25,32 @@ public class DefaultTreeService implements TreeService {
     private final TreeRepository treeRepository;
     private final FieldRepository fieldRepository;
 
-
     public void deleteTree(UUID id) {
-        Tree tree = treeRepository.findById(UUID.fromString(id.toString()))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Tree not found with id: %s", id)
-                ));
+        Tree tree = treeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tree not found with id: " + id));
         treeRepository.delete(tree);
     }
-
-//    public boolean canAddTreeToField(UUID fieldId) {
-//        return fieldRepository.countByFieldId(fieldId) < 100;
-//    }
 
     public boolean isValidPlantingDate(LocalDate plantingDate) {
         return !plantingDate.isBefore(LocalDate.now());
     }
 
     public String determineStatus(Long age) {
-        if (age < 5) {
-            return "Seedling";
-        } else if (age < 10) {
-            return "Young";
-        } else if (age < 20) {
-            return "Mature";
-        } else {
-            return "Old";
-        }
+        if (age < 3) return "YOUNG";
+        if (age < 10) return "MATURE";
+        if (age < 20) return "OLD";
+        return "NON_PRODUCTIVE";
     }
 
     public Double calculateProductivity(Long age) {
-        if (age < 5) {
-            return 0.0;
-        } else if (age < 10) {
-            return 5.0;
-        } else if (age < 20) {
-            return 10.0;
-        } else {
-            return 15.0;
-        }
+        if (age < 3) return 2.5;
+        if (age < 10) return 12.0;
+        if (age < 20) return 20.0;
+        return 0.0;
     }
 
-    public TreeResponseDTO createTree(TreeRequestDTO request) {
+    @Validated(TreeDTO.Create.class)
+    public TreeDTO createTree(@Valid TreeDTO request) {
         Field field = fieldRepository.findById(request.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException("Field not found with id: " + request.getFieldId()));
 
@@ -75,28 +60,28 @@ public class DefaultTreeService implements TreeService {
                 .build();
 
         tree = treeRepository.save(tree);
-        Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
-
-        return TreeResponseDTO.builder()
-                .id(tree.getId())
-                .datePlanted(tree.getDatePlanted())
-                .age(age)
-                .status(determineStatus(age))
-                .productivity(calculateProductivity(age))
-                .fieldId(field.getId())
-                .seasonalProductivity(calculateProductivity(age))
-                .isProductionPeriod(age < 20)
-                .build();
+        return buildTreeDTO(tree);
     }
 
-    public TreeResponseDTO getTreeById(UUID id) {
-        Tree tree = treeRepository.findById(UUID.fromString(id.toString()))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Tree not found with id: %s", id)
-                ));
-        Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
+    @Validated(TreeDTO.Update.class)
+    public TreeDTO updateTree(@Valid TreeDTO request) {
+        Tree tree = treeRepository.findById(request.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Tree not found with id: " + request.getId()));
 
-        return TreeResponseDTO.builder()
+        if (request.getDatePlanted() != null) {
+            if (isValidPlantingDate(request.getDatePlanted())) {
+                throw new BadRequestException("Invalid planting date");
+            }
+            tree.setDatePlanted(request.getDatePlanted());
+        }
+
+        tree = treeRepository.save(tree);
+        return buildTreeDTO(tree);
+    }
+
+    private TreeDTO buildTreeDTO(Tree tree) {
+        Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
+        return TreeDTO.builder()
                 .id(tree.getId())
                 .datePlanted(tree.getDatePlanted())
                 .age(age)
@@ -108,51 +93,14 @@ public class DefaultTreeService implements TreeService {
                 .build();
     }
 
-    public TreeResponseDTO updateTree(UUID id, TreeRequestDTO request) {
-        Tree tree = treeRepository.findById(UUID.fromString(id.toString()))
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Tree not found with id: %s", id)
-                ));
-
-        if (isValidPlantingDate(request.getDatePlanted()))
-            throw new BadRequestException("Invalid tree update conditions");
-
-        tree.setDatePlanted(request.getDatePlanted());
-        tree = treeRepository.save(tree);
-        Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
-
-        return TreeResponseDTO.builder()
-                .id(tree.getId())
-                .datePlanted(tree.getDatePlanted())
-                .age(age)
-                .status(determineStatus(age))
-                .productivity(calculateProductivity(age))
-                .fieldId(request.getFieldId())
-                .seasonalProductivity(calculateProductivity(age))
-                .isProductionPeriod(age < 20)
-                .build();
+    public TreeDTO getTreeById(UUID id) {
+        return buildTreeDTO(treeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Tree not found with id: " + id)));
     }
 
-    public List<TreeResponseDTO> getAllTrees() {
+    public List<TreeDTO> getAllTrees() {
         return treeRepository.findAll().stream()
-                .map(tree -> {
-                    Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
-                    return TreeResponseDTO.builder()
-                            .id(tree.getId())
-                            .datePlanted(tree.getDatePlanted())
-                            .age(age)
-                            .status(determineStatus(age))
-                            .productivity(calculateProductivity(age))
-                            .fieldId(tree.getField().getId())
-                            .seasonalProductivity(calculateProductivity(age))
-                            .isProductionPeriod(age < 20)
-                            .build();
-                })
+                .map(this::buildTreeDTO)
                 .collect(Collectors.toList());
     }
-
-//    public boolean isProductionPeriod(Long age) {
-//        return age < 20;
-//    }
-
 }

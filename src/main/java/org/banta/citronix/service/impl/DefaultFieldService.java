@@ -3,9 +3,7 @@ package org.banta.citronix.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Farm;
 import org.banta.citronix.domain.Field;
-import org.banta.citronix.dto.field.CreateFieldRequest;
 import org.banta.citronix.dto.field.FieldDTO;
-import org.banta.citronix.dto.field.UpdateFieldRequest;
 import org.banta.citronix.web.errors.exception.BadRequestException;
 import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.banta.citronix.mapper.FieldMapper;
@@ -30,7 +28,7 @@ public class DefaultFieldService implements FieldService {
 
     private static final int MAX_FIELDS_PER_FARM = 10;
 
-    public FieldDTO saveField(CreateFieldRequest request) {
+    public FieldDTO saveField(FieldDTO request) {
         Farm farm = farmRepository.findById(request.getFarmId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Farm not found with id: %s", request.getFarmId())
@@ -65,15 +63,15 @@ public class DefaultFieldService implements FieldService {
                 .collect(Collectors.toList());
     }
 
-    public FieldDTO updateField(UUID id, UpdateFieldRequest request) {
-        Field field = fieldRepository.findById(UUID.fromString(id.toString()))
+    public FieldDTO updateField(FieldDTO fieldDTO) {
+        Field field = fieldRepository.findById(fieldDTO.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Field not found with id: %s", id)
+                        String.format("Field not found with id: %s", fieldDTO.getId())
                 ));
 
-        if (request.getArea() != null && !request.getArea().equals(field.getArea())) {
-            validateFieldArea(request.getArea(), field.getFarm());
-            field.setArea(request.getArea());
+        if (fieldDTO.getArea() != null && !fieldDTO.getArea().equals(field.getArea())) {
+            validateFieldArea(fieldDTO.getArea(), field.getFarm());
+            field.setArea(fieldDTO.getArea());
         }
 
         field = fieldRepository.save(field);
@@ -81,7 +79,7 @@ public class DefaultFieldService implements FieldService {
     }
 
     public void deleteField(UUID id) {
-        if (!fieldRepository.existsById(UUID.fromString(id.toString()))) {
+        if (!fieldRepository.existsById(id)) {
             throw new ResourceNotFoundException(
                     String.format("Field not found with id: %s", id)
             );

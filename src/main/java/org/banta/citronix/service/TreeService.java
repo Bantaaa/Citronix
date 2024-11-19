@@ -1,19 +1,20 @@
 package org.banta.citronix.service;
 
-import org.banta.citronix.dto.tree.TreeRequestDTO;
-import org.banta.citronix.dto.tree.TreeResponseDTO;
+import org.banta.citronix.dto.tree.TreeDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Validated
 public interface TreeService {
-    List<TreeResponseDTO> getAllTrees();
-    TreeResponseDTO getTreeById(UUID id);
-    TreeResponseDTO createTree(TreeRequestDTO treeRequest);
-    TreeResponseDTO updateTree(UUID id, TreeRequestDTO treeRequest);
+    List<TreeDTO> getAllTrees();
+    TreeDTO getTreeById(UUID id);
+    TreeDTO createTree(TreeDTO treeRequest);
+    TreeDTO updateTree(TreeDTO treeRequest);
     void deleteTree(UUID id);
 
     // Business logic methods

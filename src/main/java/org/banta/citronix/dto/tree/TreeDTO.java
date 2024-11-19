@@ -15,6 +15,7 @@ public class TreeDTO {
     public interface Create {}
     public interface Update {}
 
+    @NotNull(message = "Tree ID is required", groups = Update.class)
     private UUID id;
 
     @NotNull(message = "Planting date is required", groups = Create.class)

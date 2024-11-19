@@ -33,7 +33,7 @@ public class TreeController {
         return ResponseEntity.ok(treeService.getAllTrees());
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/")
     public ResponseEntity<TreeDTO> updateTree(@Valid @RequestBody TreeDTO request) {
         return ResponseEntity.ok(treeService.updateTree(request));
     }

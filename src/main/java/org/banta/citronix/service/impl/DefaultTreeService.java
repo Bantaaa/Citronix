@@ -49,7 +49,6 @@ public class DefaultTreeService implements TreeService {
         return 0.0;
     }
 
-    @Validated(TreeDTO.Create.class)
     public TreeDTO createTree(@Valid TreeDTO request) {
         Field field = fieldRepository.findById(request.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException("Field not found with id: " + request.getFieldId()));
@@ -63,7 +62,6 @@ public class DefaultTreeService implements TreeService {
         return buildTreeDTO(tree);
     }
 
-    @Validated(TreeDTO.Update.class)
     public TreeDTO updateTree(@Valid TreeDTO request) {
         Tree tree = treeRepository.findById(request.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Tree not found with id: " + request.getId()));

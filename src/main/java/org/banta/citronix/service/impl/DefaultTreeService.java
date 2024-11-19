@@ -127,7 +127,7 @@ public class DefaultTreeService implements TreeService {
                 .age(age)
                 .status(determineStatus(age))
                 .productivity(calculateProductivity(age))
-                .fieldId(tree.getField().getId())
+                .fieldId(request.getFieldId())
                 .seasonalProductivity(calculateProductivity(age))
                 .isProductionPeriod(age < 20)
                 .build();

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -40,11 +39,10 @@ public class DefaultFieldService implements FieldService {
         validateFieldCount(farm.getId());
         validateFieldArea(request.getArea(), farm);
 
-        Field field = Field.builder()
-                .area(request.getArea())
-                .farm(farm)
-                .trees(new ArrayList<>())
-                .build();
+        Field field = new Field();
+        field.setArea(request.getArea());
+        field.setFarm(farm);
+        field.setTrees(new ArrayList<>());
 
         field = fieldRepository.save(field);
         return fieldMapper.toDto(field);
@@ -99,16 +97,27 @@ public class DefaultFieldService implements FieldService {
             );
         }
     }
-// KAYN CHI BLAN HNA TA TRJ3LIH
-    private void validateFieldArea(Float fieldArea, Farm farm) {
-        // Check if field area exceeds 50% of farm area
-        float maxAllowedFieldArea = farm.getArea() * 0.5f;
 
+    private void validateFieldArea(Double fieldArea, Farm farm) {
+        if (fieldArea < 1000) {
+            throw new BadRequestException(
+                    String.format("Field area must be at least 0.1 hectare (1000 m²), got %.2f m²", fieldArea)
+            );
+        }
+
+        double maxAllowedFieldArea = farm.getArea() * 0.5;
         if (fieldArea > maxAllowedFieldArea) {
             throw new BadRequestException(
                     String.format("Field area (%.2f m²) cannot exceed 50%% of farm area (%.2f m²)",
-                            fieldArea,
-                            maxAllowedFieldArea)
+                            fieldArea, maxAllowedFieldArea)
+            );
+        }
+
+        Double currentTotalArea = fieldRepository.sumAreaByFarmId(farm.getId());
+        if (currentTotalArea != null && (currentTotalArea + fieldArea) > farm.getArea()) {
+            throw new BadRequestException(
+                    String.format("Total field area (%.2f m²) would exceed farm area (%.2f m²)",
+                            currentTotalArea + fieldArea, farm.getArea())
             );
         }
     }

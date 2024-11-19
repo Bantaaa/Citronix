@@ -22,7 +22,7 @@ public class Field {
 
     @NotNull(message = "Field area is required")
     @Min(value = 1000, message = "Field area must be at least 0.1 hectare (1000 m²)")
-    private Float area; // in m²
+    private Double area; //
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Farm is required")
@@ -31,15 +31,4 @@ public class Field {
     @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Tree> trees = new ArrayList<>();
-
-    // Helper method to add a tree to the field
-    public void addTree(Tree tree) {
-        trees.add(tree);
-        tree.setField(this);
-    }
-
-    public void removeTree(Tree tree) {
-        trees.remove(tree);
-        tree.setField(null);
-    }
 }

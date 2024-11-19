@@ -1,8 +1,11 @@
 package org.banta.citronix.web.rest;
 
+import lombok.RequiredArgsConstructor;
 import org.banta.citronix.dto.farm.FarmDTO;
 import org.banta.citronix.dto.farm.FarmSearchCriteria;
 import org.banta.citronix.service.FarmService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +15,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/farms")
 public class FarmController {
-
-    private final FarmService farmService;
-
-    public FarmController(FarmService farmService) {
-        this.farmService = farmService;
-    }
+    @Autowired @Qualifier("defaultFarmService")
+    private FarmService farmService;
 
     @PostMapping("/create")
     public ResponseEntity<FarmDTO> createFarm(@RequestBody FarmDTO farmDTO) {
@@ -27,6 +26,11 @@ public class FarmController {
     @PutMapping("/update")
     public ResponseEntity<FarmDTO> updateFarm(@RequestBody FarmDTO farmDTO) {
         return ResponseEntity.ok(farmService.update(farmDTO));
+    }
+
+    @GetMapping("/lessThan4000")
+    public ResponseEntity<List<FarmDTO>> getFarmsLessThan4000() {
+        return ResponseEntity.ok(farmService.getFarmsWithSumFieldsAreaLessThan4000());
     }
 
     @DeleteMapping("/delete/{id}")

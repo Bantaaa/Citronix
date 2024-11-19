@@ -2,6 +2,7 @@ package org.banta.citronix.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Farm;
+import org.banta.citronix.domain.Field;
 import org.banta.citronix.dto.farm.FarmDTO;
 import org.banta.citronix.dto.farm.FarmSearchCriteria;
 import org.banta.citronix.mapper.FarmMapper;
@@ -16,22 +17,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class DefaultFarmService implements FarmService {
     private final FarmRepository farmRepository;
     private final FarmMapper farmMapper;
 
     @Override
-    @Transactional
     public FarmDTO save(FarmDTO farmDTO) {
+        if (farmDTO.getFields() == null) {
+            throw new ResourceNotFoundException("Farm must have a list of fields");
+        }
         Farm farm = farmMapper.toEntity(farmDTO);
         farm = farmRepository.save(farm);
         return farmMapper.toDto(farm);
     }
 
     @Override
-    @Transactional
     public FarmDTO update(FarmDTO farmDTO) {
         Farm farm = farmMapper.toEntity(farmDTO);
         farm = farmRepository.save(farm);
@@ -39,7 +40,6 @@ public class DefaultFarmService implements FarmService {
     }
 
     @Override
-    @Transactional
     public void deleteById(UUID id) {
         farmRepository.deleteById(id);
     }
@@ -53,10 +53,19 @@ public class DefaultFarmService implements FarmService {
         return farmMapper.toDto(farm);
     }
 
-    @Transactional(readOnly = true)
     public List<FarmDTO> searchFarms(FarmSearchCriteria criteria) {
         return farmRepository.findAll(FarmSpecifications.withCriteria(criteria))
                 .stream()
+                .map(farmMapper::toDto)
+                .toList();
+    }
+
+    public List<FarmDTO> getFarmsWithSumFieldsAreaLessThan4000() {
+        List<Farm> farms = farmRepository.findAll();
+
+        farms.removeIf(farm -> farm.getFields().stream().mapToDouble(Field::getArea).sum() >= 4000);
+
+        return farms.stream()
                 .map(farmMapper::toDto)
                 .toList();
     }

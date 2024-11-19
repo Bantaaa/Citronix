@@ -1,5 +1,7 @@
 package org.banta.citronix.service.impl;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Farm;
 import org.banta.citronix.domain.Field;
@@ -16,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -100,13 +101,24 @@ public class DefaultFieldService implements FieldService {
         }
     }
 // KAYN CHI BLAN HNA TA TRJ3LIH
-    private void validateFieldArea(Float fieldArea, Farm farm) {
+    private void validateFieldArea(@NotNull Double fieldArea, Farm farm) {
         // Check if field area exceeds 50% of farm area
-        float maxAllowedFieldArea = farm.getArea() * 0.5f;
+        Double maxAllowedFieldArea = (double) (farm.getArea() * 1);
+
+        //check if field aread exceeds the left empty area of the farm
+        Double leftEmptyArea = farm.getArea() - farm.getFields().stream().mapToDouble(Field::getArea).sum();
+
+        if(fieldArea > leftEmptyArea){
+            throw new BadRequestException(
+                    String.format("Field area (%.2f m²) cannot exceed the left empty area of the farm (%.2f m²)",
+                            fieldArea,
+                            leftEmptyArea)
+            );
+        }
 
         if (fieldArea > maxAllowedFieldArea) {
             throw new BadRequestException(
-                    String.format("Field area (%.2f m²) cannot exceed 50%% of farm area (%.2f m²)",
+                    String.format("Field area (%.2f m²) cannot exceed 100%% of farm area (%.2f m²)",
                             fieldArea,
                             maxAllowedFieldArea)
             );

@@ -11,7 +11,7 @@ public interface HarvestService {
     HarvestDTO createHarvest(HarvestDTO harvestDTO);
     HarvestDTO updateHarvest(HarvestDTO harvestDTO);
     void deleteHarvest(UUID harvestId);
-    List<HarvestDTO> getHarvests();
+//    List<HarvestDTO> getHarvests();
     HarvestDTO getHarvestById(UUID harvestId);
     Boolean isTreeHarvestedInSeason(HarvestDTO harvestDTO);
     Boolean existsBySeasonAndYear(HarvestDTO harvestDTO);

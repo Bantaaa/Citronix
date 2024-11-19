@@ -28,10 +28,10 @@ public class HarvestController {
         return ResponseEntity.ok(harvestService.getHarvestById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<HarvestDTO>> getAllHarvests() {
-        return ResponseEntity.ok(harvestService.getHarvests());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<HarvestDTO>> getAllHarvests() {
+//        return ResponseEntity.ok(harvestService.getHarvests());
+//    }
 
     @PutMapping("/update")
     public ResponseEntity<HarvestDTO> updateHarvest(@Valid @RequestBody HarvestDTO harvestDTO) {

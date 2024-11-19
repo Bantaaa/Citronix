@@ -65,11 +65,11 @@ public class DefaultHarvestService implements HarvestService {
         harvestRepository.deleteById(harvestId);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<HarvestDTO> getHarvests() {
-        return harvestMapper.toDtoList(harvestRepository.findAll());
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<HarvestDTO> getHarvests() {
+//        return harvestMapper.toDtoList(harvestRepository.findAll());
+//    }
 
     @Override
     @Transactional(readOnly = true)

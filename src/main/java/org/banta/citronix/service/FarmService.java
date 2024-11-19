@@ -12,4 +12,5 @@ public interface FarmService {
     void deleteById(UUID id);
     FarmDTO getFarmDetails(UUID id);
     List<FarmDTO> searchFarms(FarmSearchCriteria criteria);
+    void validateFarmData(FarmDTO farmDTO);
 }

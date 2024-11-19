@@ -11,19 +11,8 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface HarvestDetailMapper {
     @Mapping(source = "tree.id", target = "treeId")
-    @Mapping(source = "harvest.id", target = "harvestId")
     HarvestDetailDTO toDto(HarvestDetail detail);
 
-    @Mapping(target = "tree", expression = "java(createTreeRef(dto.getTreeId()))")
-    @Mapping(target = "harvest", ignore = true)
+    @Mapping(source = "treeId", target = "tree.id")
     HarvestDetail toEntity(HarvestDetailDTO dto);
-
-    List<HarvestDetailDTO> toDtoList(List<HarvestDetail> details);
-
-    default Tree createTreeRef(UUID id) {
-        if (id == null) return null;
-        Tree tree = new Tree();
-        tree.setId(id);
-        return tree;
-    }
 }

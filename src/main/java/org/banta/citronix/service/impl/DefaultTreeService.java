@@ -53,6 +53,10 @@ public class DefaultTreeService implements TreeService {
         Field field = fieldRepository.findById(request.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException("Field not found with id: " + request.getFieldId()));
 
+        if (field.getArea()/100 > field.getTrees().size() ) {
+            throw new BadRequestException("Field is full");
+        }
+
         Tree tree = Tree.builder()
                 .datePlanted(request.getDatePlanted())
                 .field(field)

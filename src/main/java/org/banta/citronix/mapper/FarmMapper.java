@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {FieldMapper.class})
 public interface FarmMapper {
-    @Mapping(target = "fields", ignore = true)  // Add this
+    @Mapping(target = "fields")
     Farm toEntity(FarmDTO farmDTO);
     FarmDTO toDto(Farm farm);
 }

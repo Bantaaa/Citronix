@@ -11,7 +11,6 @@ import org.banta.citronix.web.errors.exception.BadRequestException;
 import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.banta.citronix.service.TreeService;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -39,14 +38,14 @@ public class DefaultTreeService implements TreeService {
     public String determineStatus(Long age) {
         if (age < 3) return "YOUNG";
         if (age < 10) return "MATURE";
-        if (age < 20) return "OLD";
-        return "NON_PRODUCTIVE";
+        if (age > 10) return "OLD";
+        return "UNKNOWN";
     }
 
     public Double calculateProductivity(Long age) {
         if (age < 3) return 2.5;
-        if (age < 10) return 12.0;
-        if (age < 20) return 20.0;
+        if (age <= 10) return 12.0;
+        if (age > 20) return 20.0;
         return 0.0;
     }
 
@@ -57,7 +56,7 @@ public class DefaultTreeService implements TreeService {
         Field field = fieldRepository.findById(request.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException("Field not found with id: " + request.getFieldId()));
 
-        if (field.getArea()/100 > field.getTrees().size() ) {
+        if (field.getArea()/100 < field.getTrees().size() ) {
             throw new BadRequestException("Field is full");
         }
 
@@ -87,6 +86,7 @@ public class DefaultTreeService implements TreeService {
 
     private TreeDTO buildTreeDTO(Tree tree) {
         Long age = ChronoUnit.YEARS.between(tree.getDatePlanted(), LocalDate.now());
+
         return TreeDTO.builder()
                 .id(tree.getId())
                 .datePlanted(tree.getDatePlanted())
@@ -94,8 +94,6 @@ public class DefaultTreeService implements TreeService {
                 .status(determineStatus(age))
                 .productivity(calculateProductivity(age))
                 .fieldId(tree.getField().getId())
-                .seasonalProductivity(calculateProductivity(age))
-                .isProductionPeriod(age < 20)
                 .build();
     }
 
@@ -109,4 +107,6 @@ public class DefaultTreeService implements TreeService {
                 .map(this::buildTreeDTO)
                 .collect(Collectors.toList());
     }
+
+    
 }

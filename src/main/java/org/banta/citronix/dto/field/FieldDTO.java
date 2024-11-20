@@ -16,6 +16,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FieldDTO {
+    public interface Create {};
+    public interface Update {};
+
     private UUID id;
 
     @NotNull(message = "Area is required")
@@ -23,7 +26,7 @@ public class FieldDTO {
     @Max(value = Integer.MAX_VALUE, message = "Field area cannot exceed 50% of farm area") // Note: Actual validation done in service
     private Double area;
 
-    @NotNull(message = "Farm ID is required")
+    @NotNull(message = "Farm ID is required", groups = {Create.class})
     private UUID farmId;
 
     @Valid

@@ -87,6 +87,8 @@ public class DefaultFarmService implements FarmService {
     public FarmDTO getFarmDetails(UUID id) {
         Farm farm = farmRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Farm not found with id: %s", id)));
+
+
         return farmMapper.toDto(farm);
     }
 

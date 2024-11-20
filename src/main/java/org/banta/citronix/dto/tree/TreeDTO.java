@@ -29,6 +29,4 @@ public class TreeDTO {
     private Long age;
     private String status;
     private Double productivity;
-    private Double seasonalProductivity;
-    private Boolean isProductionPeriod;
 }

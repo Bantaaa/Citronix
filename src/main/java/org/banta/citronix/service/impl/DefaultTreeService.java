@@ -32,7 +32,8 @@ public class DefaultTreeService implements TreeService {
     }
 
     public boolean isValidPlantingDate(LocalDate plantingDate) {
-        return !plantingDate.isBefore(LocalDate.now());
+        int month = plantingDate.getMonthValue();
+        return month >= 3 && month <= 5; // March (3) to May (5)
     }
 
     public String determineStatus(Long age) {
@@ -50,6 +51,9 @@ public class DefaultTreeService implements TreeService {
     }
 
     public TreeDTO createTree(@Valid TreeDTO request) {
+        if (!isValidPlantingDate(request.getDatePlanted())) {
+            throw new BadRequestException("Trees can only be planted between March and May");
+        }
         Field field = fieldRepository.findById(request.getFieldId())
                 .orElseThrow(() -> new ResourceNotFoundException("Field not found with id: " + request.getFieldId()));
 

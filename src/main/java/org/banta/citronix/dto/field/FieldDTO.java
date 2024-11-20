@@ -16,21 +16,17 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FieldDTO {
-    // Validation groups bach man7tajch 3 DTOs
-    public interface Create {}
-    public interface Update {}
-
     private UUID id;
 
     @NotNull(message = "Area is required")
     @Min(value = 1000, message = "Field area must be at least 0.1 hectare (1000 m²)")
+    @Max(value = Integer.MAX_VALUE, message = "Field area cannot exceed 50% of farm area") // Note: Actual validation done in service
     private Double area;
 
-    @NotNull(message = "Farm ID is required", groups = Update.class)
+    @NotNull(message = "Farm ID is required")
     private UUID farmId;
 
     @Valid
-    @Size(max = 1000, message = "A field cannot have more than 1000 trees",
-            groups = {Create.class, Update.class})
+    @Size(max = 1000, message = "A field cannot have more than 1000 trees") // This should be calculated based on field area
     private List<TreeDTO> trees;
 }

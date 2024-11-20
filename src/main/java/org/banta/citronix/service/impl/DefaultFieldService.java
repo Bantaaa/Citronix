@@ -103,7 +103,7 @@ public class DefaultFieldService implements FieldService {
             );
         }
 
-        double maxAllowedFieldArea = farm.getArea() * 0.5;
+        double maxAllowedFieldArea = farm.getArea() / 2;
         if (fieldArea > maxAllowedFieldArea) {
             throw new BadRequestException(
                     String.format("Field area (%.2f m²) cannot exceed 50%% of farm area (%.2f m²)",

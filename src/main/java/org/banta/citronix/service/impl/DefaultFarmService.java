@@ -43,7 +43,7 @@ public class DefaultFarmService implements FarmService {
                         String.format("Farm not found with id: %s", farmDTO.getId())
                 ));
 
-        // Validate only provided fields
+        // validation
         if (farmDTO.getArea() != null) {
             validateArea(farmDTO.getArea());
         }

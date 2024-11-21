@@ -11,8 +11,8 @@ import java.util.UUID;
 
 @Repository
 public interface HarvestRepository extends JpaRepository<Harvest, UUID> {
-    @Query("SELECT COUNT(h) > 0 FROM Harvest h WHERE h.season = :season")
-    boolean existsBySeasonAndYear(@Param("season") Season season);
+    @Query("SELECT COUNT(h) > 0 FROM Harvest h WHERE h.season = :season AND YEAR(h.harvestDate) = :year")
+    boolean existsBySeasonAndYear(@Param("season") Season season, @Param("year") Integer year);
 
     @Query("SELECT COUNT(hd) > 0 FROM HarvestDetail hd " +
             "WHERE hd.tree.id = :treeId AND hd.harvest.season = :season")

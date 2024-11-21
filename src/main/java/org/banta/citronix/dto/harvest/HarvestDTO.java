@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.banta.citronix.domain.enums.Season;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HarvestDTO {
+    public interface Update {};
+
+    @NotNull(message = "Harvest ID is required", groups = Update.class)
     private UUID id;
 
     @NotNull(message = "Season is required")

@@ -25,7 +25,8 @@ public class DefaultHarvestService implements HarvestService {
 
     @Override
     public HarvestDTO createHarvest(HarvestDTO harvestDTO) {
-        if (existsBySeasonAndYear(harvestDTO)) {
+        Integer year = harvestDTO.getHarvestDate().getYear();
+        if (existsBySeasonAndYear(harvestDTO, year)) {
             throw new BadRequestException("A harvest for this season already exists");
         }
 
@@ -84,7 +85,7 @@ public class DefaultHarvestService implements HarvestService {
     }
 
     @Override
-    public Boolean existsBySeasonAndYear(HarvestDTO harvestDTO) {
-        return harvestRepository.existsBySeasonAndYear(harvestDTO.getSeason());
+    public Boolean existsBySeasonAndYear(HarvestDTO harvestDTO, Integer year) {
+        return harvestRepository.existsBySeasonAndYear(harvestDTO.getSeason(), year);
     }
 }

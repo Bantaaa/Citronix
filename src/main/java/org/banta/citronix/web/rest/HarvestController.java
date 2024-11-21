@@ -44,12 +44,6 @@ public class HarvestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/check-season/{season}")
-    public ResponseEntity<Boolean> checkSeasonAvailability(@PathVariable Season season) {
-        HarvestDTO dto = HarvestDTO.builder().season(season).build();
-        return ResponseEntity.ok(harvestService.existsBySeasonAndYear(dto));
-    }
-
     @GetMapping("/check-tree/{treeId}/season/{season}")
     public ResponseEntity<Boolean> checkTreeHarvestStatus(
             @PathVariable UUID treeId,

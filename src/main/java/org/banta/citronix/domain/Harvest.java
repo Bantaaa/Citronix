@@ -30,22 +30,4 @@ public class Harvest {
     private LocalDate harvestDate;
 
     private Double totalQuantity;
-
-    // Helper methods to manage the relationship
-    public void addHarvestDetail(HarvestDetail detail) {
-        harvestDetails.add(detail);
-        detail.setHarvest(this);
-    }
-
-    public void removeHarvestDetail(HarvestDetail detail) {
-        harvestDetails.remove(detail);
-        detail.setHarvest(null);
-    }
-
-    public void setHarvestDetails(List<HarvestDetail> details) {
-        this.harvestDetails.clear();
-        if (details != null) {
-            details.forEach(this::addHarvestDetail);
-        }
-    }
 }

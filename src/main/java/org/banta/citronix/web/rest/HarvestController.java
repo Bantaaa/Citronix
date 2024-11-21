@@ -49,7 +49,6 @@ public class HarvestController {
             @PathVariable UUID treeId,
             @PathVariable Season season) {
         HarvestDTO dto = HarvestDTO.builder()
-                .season(season)
                 .harvestDetails(List.of(HarvestDetailDTO.builder().treeId(treeId).build()))
                 .build();
         return ResponseEntity.ok(harvestService.isTreeHarvestedInSeason(dto));

@@ -1,5 +1,6 @@
 package org.banta.citronix.dto.harvest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +26,7 @@ public class HarvestDTO {
     @NotNull(message = "Harvest ID is required", groups = Update.class)
     private UUID id;
 
-    @NotNull(message = "Season is required")
+    @JsonIgnore
     private Season season;
 
     @NotNull(message = "Harvest date is required")

@@ -15,7 +15,7 @@ public interface FieldRepository extends JpaRepository<Field, UUID> {
     List<Field> findByFarmId(@Param("farmId") UUID farmId);
 
     @Query("SELECT SUM(f.area) FROM Field f WHERE f.farm.id = :farmId")
-    Float sumAreaByFarmId(@Param("farmId") UUID farmId);
+    Double sumAreaByFarmId(@Param("farmId") UUID farmId);
 
     Long countByFarmId(UUID farmId);
 

@@ -3,6 +3,7 @@ package org.banta.citronix.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Harvest;
 import org.banta.citronix.domain.HarvestDetail;
+import org.banta.citronix.domain.enums.Season;
 import org.banta.citronix.dto.harvest.HarvestDTO;
 import org.banta.citronix.dto.harvest.HarvestDetailDTO;
 import org.banta.citronix.mapper.HarvestMapper;
@@ -13,6 +14,7 @@ import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +27,10 @@ public class DefaultHarvestService implements HarvestService {
 
     @Override
     public HarvestDTO createHarvest(HarvestDTO harvestDTO) {
-        if (existsBySeasonAndYear(harvestDTO)) {
+        Season season = getSeasonByDate(harvestDTO.getHarvestDate());
+        harvestDTO.setSeason(season);
+
+        if (existsBySeasonAndYear(harvestDTO, harvestDTO.getHarvestDate().getYear())) {
             throw new BadRequestException("A harvest for this season already exists");
         }
 
@@ -45,6 +50,15 @@ public class DefaultHarvestService implements HarvestService {
 
         harvest = harvestRepository.save(harvest);
         return harvestMapper.toDto(harvest);
+    }
+
+    @Override
+    public Season getSeasonByDate(LocalDate date) {
+        int month = date.getMonthValue();
+        if (month >= 3 && month <= 5) return Season.SPRING;
+        if (month >= 6 && month <= 8) return Season.SUMMER;
+        if (month >= 9 && month <= 11) return Season.AUTUMN;
+        return Season.WINTER;
     }
     
     @Override
@@ -80,11 +94,11 @@ public class DefaultHarvestService implements HarvestService {
 
     @Override
     public Boolean isTreeHarvestedInSeason(HarvestDTO harvestDTO) {
-        return harvestRepository.isTreeHarvestedInSeason(harvestDTO.getHarvestDetails().get(0).getTreeId(), harvestDTO.getSeason());
+        return harvestRepository.isTreeHarvestedInSeason(harvestDTO.getHarvestDetails().get(0).getTreeId(), getSeasonByDate(harvestDTO.getHarvestDate()));
     }
 
     @Override
-    public Boolean existsBySeasonAndYear(HarvestDTO harvestDTO) {
-        return harvestRepository.existsBySeasonAndYear(harvestDTO.getSeason());
+    public Boolean existsBySeasonAndYear(HarvestDTO harvestDTO, Integer year) {
+        return harvestRepository.existsBySeasonAndYear(getSeasonByDate(harvestDTO.getHarvestDate()), year);
     }
 }

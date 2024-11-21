@@ -21,6 +21,7 @@ public class FarmController {
 
     @PostMapping("/create")
     public ResponseEntity<FarmDTO> createFarm(@RequestBody FarmDTO farmDTO) {
+
         return ResponseEntity.ok(farmService.save(farmDTO));
     }
 
@@ -53,10 +54,7 @@ public class FarmController {
     private boolean isEmpty(FarmSearchCriteria criteria) {
         return (criteria.getName() == null || criteria.getName().trim().isEmpty()) &&
                 (criteria.getLocation() == null || criteria.getLocation().trim().isEmpty()) &&
-                criteria.getMinArea() == null &&
-                criteria.getMaxArea() == null &&
-                criteria.getEstablishedAfter() == null &&
-                criteria.getEstablishedBefore() == null;
+                criteria.getMinArea() == null;
     }
 
 }

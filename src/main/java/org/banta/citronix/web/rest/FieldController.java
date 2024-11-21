@@ -1,9 +1,7 @@
 package org.banta.citronix.web.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.banta.citronix.dto.field.CreateFieldRequest;
 import org.banta.citronix.dto.field.FieldDTO;
-import org.banta.citronix.dto.field.UpdateFieldRequest;
 import org.banta.citronix.service.FieldService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +18,7 @@ public class FieldController {
     private final FieldService fieldService;
 
     @PostMapping("/save")
-    public ResponseEntity<FieldDTO> createField(@Valid @RequestBody CreateFieldRequest request) {
+    public ResponseEntity<FieldDTO> createField(@Valid @RequestBody FieldDTO request) {
         return ResponseEntity.ok(fieldService.saveField(request));
     }
 
@@ -34,9 +32,9 @@ public class FieldController {
         return ResponseEntity.ok(fieldService.getAllFieldsByFarmId(farmId));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<FieldDTO> updateField(@PathVariable UUID id, @Valid @RequestBody UpdateFieldRequest request) {
-        return ResponseEntity.ok(fieldService.updateField(id, request));
+    @PutMapping("/update/")
+    public ResponseEntity<FieldDTO> updateField(@Valid @RequestBody FieldDTO request) {
+        return ResponseEntity.ok(fieldService.updateField(request));
     }
 
     @DeleteMapping("/delete/{id}")

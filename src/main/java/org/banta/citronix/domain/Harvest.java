@@ -30,4 +30,7 @@ public class Harvest {
     private LocalDate harvestDate;
 
     private Double totalQuantity;
+
+    @OneToOne(mappedBy = "harvest")
+    private Sale sale;
 }

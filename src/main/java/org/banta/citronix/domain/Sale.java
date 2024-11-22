@@ -20,6 +20,6 @@ public class Sale {
     private LocalDate saleDate;
     private Double unitPrice;
     private String customer;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private Harvest harvest;
 }

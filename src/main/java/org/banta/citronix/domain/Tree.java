@@ -1,16 +1,33 @@
 package org.banta.citronix.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tree {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @NotNull(message = "Planting date is required")
     private LocalDate datePlanted;
-    @ManyToOne
-    private Farm farm;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull(message = "Field is required")
+    private Field field;
+
+    @OneToMany(mappedBy = "tree")
+    @Builder.Default
+    private List<HarvestDetail> harvests = new ArrayList<>();
 }

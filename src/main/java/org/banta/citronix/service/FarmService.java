@@ -1,18 +1,17 @@
 package org.banta.citronix.service;
 
-import org.banta.citronix.domain.Farm;
-import org.banta.citronix.repository.FarmRepository;
-import org.springframework.stereotype.Service;
+import org.banta.citronix.dto.farm.FarmDTO;
+import org.banta.citronix.dto.farm.FarmSearchCriteria;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-@Service
-public class FarmService {
-    private FarmRepository farmRepository;
+import java.util.UUID;
 
-    public FarmService(FarmRepository farmRepository) {
-        this.farmRepository = farmRepository;
-    }
-
-    public Farm save(Farm farm) {
-        return farmRepository.save(farm);
-    }
+public interface FarmService {
+    FarmDTO save(FarmDTO farmDTO);
+    FarmDTO update(FarmDTO farmDTO);
+    void deleteById(UUID id);
+    FarmDTO getFarmDetails(UUID id);
+    Page<FarmDTO> searchFarms(FarmSearchCriteria criteria, Pageable pageable);
+    void validateFarmData(FarmDTO farmDTO);
 }

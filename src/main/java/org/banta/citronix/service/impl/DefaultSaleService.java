@@ -1,5 +1,6 @@
 package org.banta.citronix.service.impl;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Sale;
 import org.banta.citronix.dto.harvest.HarvestDTO;
@@ -24,21 +25,31 @@ import java.util.stream.Collectors;
 public class DefaultSaleService implements SaleService {
     private final SaleRepository saleRepository;
     private final HarvestService harvestService;
+    private final HarvestMapper harvestMapper;
     private final SaleMapper saleMapper;
 
     @Override
     public SaleDTO createSale(SaleDTO saleDTO) {
-        validateSale(saleDTO);
-
         HarvestDTO harvestDTO = harvestService.getHarvestById(saleDTO.getHarvestId());
-
+        if (harvestDTO == null) {
+            throw new ResourceNotFoundException("Harvest not found with ID: " + saleDTO.getHarvestId());
+        }
+        if (findSaleByHarvestId(saleDTO.getHarvestId())) {
+            throw new BadRequestException("Sale for harvest with ID " + saleDTO.getHarvestId() + " already exists");
+        }
         // Calculate revenue
         Double revenue = calculateRevenue(saleDTO.getUnitPrice(), harvestDTO.getTotalQuantity());
         saleDTO.setRevenue(revenue);
 
         Sale sale = saleMapper.toEntity(saleDTO);
+        sale.setHarvest(harvestMapper.toEntity(harvestDTO));
         sale = saleRepository.save(sale);
-        return saleMapper.toDto(sale);
+        saleDTO.setId(sale.getId());
+        return saleDTO;
+    }
+
+    private boolean findSaleByHarvestId(@NotNull(message = "Harvest ID is required") UUID harvestId) {
+        return saleRepository.existsByHarvestId(harvestId);
     }
 
     @Override
@@ -63,16 +74,6 @@ public class DefaultSaleService implements SaleService {
         return saleRepository.findAll().stream()
                 .map(saleMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    private void validateSale(SaleDTO saleDTO) {
-        if (saleDTO.getUnitPrice() == null || saleDTO.getUnitPrice() <= 0) {
-            throw new BadRequestException("Unit price must be greater than 0");
-        }
-
-        if (saleDTO.getHarvestId() == null) {
-            throw new BadRequestException("Harvest ID is required");
-        }
     }
 
     private Double calculateRevenue(Double unitPrice, Double quantity) {

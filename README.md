@@ -1,3 +1,6 @@
+Presentation Link : [Click Here](https://slidesgo.com/editor/share/9d8f0ec6-bf68-4719-8bf5-67c5ed12206f?embed=0&expires=1732466809&signature=f63aefefd0cf0bc7c0dd7a55e22c2be66ffdc8506317fc6cac40f209b5d0b368)
+
+
 UML CLASS DIAGRAM LINK : [Click Here](https://excalidraw.com/#json=Qnno1zps2YDBTsLIIUlSU,iSZn7hp4gkzK0140cX1C1A)
 
 # Citronix Farm Management System

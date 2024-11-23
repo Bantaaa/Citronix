@@ -16,7 +16,4 @@ public interface HarvestService {
     List<HarvestDTO> getHarvests();
     HarvestDTO getHarvestById(UUID harvestId);
     Season getSeasonByDate(LocalDate date);
-    String isTreeHarvestedInSeason(UUID treeId, Season season, Integer year);
-    Boolean existsBySeasonAndYear(HarvestDTO harvestDTO, Integer year);
-    void singleFieldPerHarvest(HarvestDTO harvestDTO);
 }

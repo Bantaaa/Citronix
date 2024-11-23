@@ -45,12 +45,4 @@ public class HarvestController {
         harvestService.deleteHarvest(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/check-tree/{treeId}/season/{season}/year/{year}")
-    public ResponseEntity<String> checkTreeHarvestStatus(
-            @PathVariable(required = true) UUID treeId,
-            @PathVariable(required = true) Season season,
-            @PathVariable(required = true) Integer year) {
-        return ResponseEntity.ok(harvestService.isTreeHarvestedInSeason(treeId, season, year));
-    }
 }

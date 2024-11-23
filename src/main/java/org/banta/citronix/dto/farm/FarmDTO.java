@@ -31,7 +31,7 @@ public class FarmDTO {
 
     @NotNull(message = "Farm area is required")
     @Min(value = 2000, message = "Farm area must be at least 0.2 hectare (2000 m²)")
-    private Float area;
+    private Double area;
 
     @NotNull(message = "Date established is required")
     @PastOrPresent(message = "Establishment date cannot be in the future")

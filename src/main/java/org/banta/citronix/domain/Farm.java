@@ -32,7 +32,7 @@ public class Farm {
 
     @NotNull(message = "Area is required")
     @Min(value = 2000, message = "Farm area must be at least 0.2 hectare")
-    private Float area;
+    private Double area;
 
     @NotNull(message = "Establishment date is required")
     @PastOrPresent(message = "Establishment date cannot be in the future")

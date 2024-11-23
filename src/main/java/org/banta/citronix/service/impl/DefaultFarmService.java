@@ -10,6 +10,8 @@ import org.banta.citronix.service.FarmService;
 import org.banta.citronix.specification.FarmSpecifications;
 import org.banta.citronix.web.errors.exception.BadRequestException;
 import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,7 +102,7 @@ public class DefaultFarmService implements FarmService {
         validateEstablishmentDate(farmDTO.getDateEstablished());
     }
 
-    private void validateArea(Float area) {
+    private void validateArea(Double area) {
         if (area == null || area < 2000) {
             throw new BadRequestException("Farm area must be at least 0.2 hectare (2000 m²)");
         }
@@ -129,10 +131,8 @@ public class DefaultFarmService implements FarmService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<FarmDTO> searchFarms(FarmSearchCriteria criteria) {
-        return farmRepository.findAll(FarmSpecifications.withCriteria(criteria))
-                .stream()
-                .map(farmMapper::toDto)
-                .toList();
+    public Page<FarmDTO> searchFarms(FarmSearchCriteria criteria, Pageable pageable) {
+        return farmRepository.findAll(FarmSpecifications.withCriteria(criteria), pageable)
+                .map(farmMapper::toDto);
     }
 }

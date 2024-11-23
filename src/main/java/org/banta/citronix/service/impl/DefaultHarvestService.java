@@ -51,7 +51,12 @@ public class DefaultHarvestService implements HarvestService {
             double totalQuantity = harvest.getHarvestDetails().stream()
                     .mapToDouble(HarvestDetail::getQuantity)
                     .sum();
+
             harvest.setTotalQuantity(totalQuantity);
+        }
+        if (harvest.getHarvestDetails() != null) {
+            Harvest finalHarvest = harvest;
+            harvest.getHarvestDetails().forEach(detail -> detail.setHarvest(finalHarvest));
         }
 
         harvest = harvestRepository.save(harvest);

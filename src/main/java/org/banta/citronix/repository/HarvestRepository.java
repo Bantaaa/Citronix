@@ -15,6 +15,12 @@ public interface HarvestRepository extends JpaRepository<Harvest, UUID> {
     boolean existsBySeasonAndYear(@Param("season") Season season, @Param("year") Integer year);
 
     @Query("SELECT COUNT(hd) > 0 FROM HarvestDetail hd " +
-            "WHERE hd.tree.id = :treeId AND hd.harvest.season = :season")
-    boolean isTreeHarvestedInSeason(@Param("treeId") UUID treeId, @Param("season") Season season);
+            "WHERE hd.tree.id = :treeId " +
+            "AND hd.harvest.season = :season " +
+            "AND YEAR(hd.harvest.harvestDate) = :year")
+    boolean isTreeHarvestedInSeason(
+            @Param("treeId") UUID treeId,
+            @Param("season") Season season,
+            @Param("year") Integer year);
+
 }

@@ -3,11 +3,9 @@ package org.banta.citronix.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Harvest;
 import org.banta.citronix.domain.HarvestDetail;
-import org.banta.citronix.domain.Tree;
 import org.banta.citronix.domain.enums.Season;
 import org.banta.citronix.dto.harvest.HarvestDTO;
 import org.banta.citronix.dto.harvest.HarvestDetailDTO;
-import org.banta.citronix.dto.tree.TreeDTO;
 import org.banta.citronix.mapper.HarvestMapper;
 import org.banta.citronix.repository.HarvestRepository;
 import org.banta.citronix.service.HarvestService;
@@ -31,49 +29,40 @@ public class DefaultHarvestService implements HarvestService {
 
     @Override
     public HarvestDTO createHarvest(HarvestDTO harvestDTO) {
-        Season season = getSeasonByDate(harvestDTO.getHarvestDate());
-        harvestDTO.setSeason(season);
-
-        if (existsBySeasonAndYear(harvestDTO, harvestDTO.getHarvestDate().getYear())) {
-            throw new BadRequestException("A harvest for this season already exists");
-        }
-
-        if (isTreeHarvestedInSeason(harvestDTO)) {
-            throw new BadRequestException("Some trees have already been harvested this season");
-        }
-
-        singleFieldPerHarvest(harvestDTO);
+        harvestDTO.setSeason(getSeasonByDate(harvestDTO.getHarvestDate()));
+        validateHarvest(harvestDTO);
 
         Harvest harvest = harvestMapper.toEntity(harvestDTO);
 
-        // Calculate total quantity
         if (harvest.getHarvestDetails() != null) {
             double totalQuantity = harvest.getHarvestDetails().stream()
                     .mapToDouble(HarvestDetail::getQuantity)
                     .sum();
             harvest.setTotalQuantity(totalQuantity);
+
+            Harvest finalHarvest = harvest;
+            harvest.getHarvestDetails().forEach(detail -> detail.setHarvest(finalHarvest));
         }
 
         harvest = harvestRepository.save(harvest);
         return harvestMapper.toDto(harvest);
     }
 
-    @Override
-    public Boolean singleFieldPerHarvest(HarvestDTO harvestDTO) {
-        List<HarvestDetailDTO> details = harvestDTO.getHarvestDetails();
-        if (details.isEmpty()) return true;
-
-        int j = 1;
-        UUID referenceFieldId = treeService.getTreeById(details.get(0).getTreeId()).getFieldId();
-
-        while (j < details.size()) {
-            UUID currentFieldId = treeService.getTreeById(details.get(j).getTreeId()).getFieldId();
-            if (!referenceFieldId.equals(currentFieldId)) {
-                throw new BadRequestException("Harvest should only be associated with one field");
-            }
-            j++;
+    private void validateHarvest(HarvestDTO harvestDTO) {
+        if (harvestDTO.getHarvestDetails() == null || harvestDTO.getHarvestDetails().isEmpty()) {
+            throw new BadRequestException("Harvest details are required");
         }
-        return true;
+
+        Season season = getSeasonByDate(harvestDTO.getHarvestDate());
+        int year = harvestDTO.getHarvestDate().getYear();
+
+        // For each tree, check if its field already has a harvest this season
+        for (HarvestDetailDTO detail : harvestDTO.getHarvestDetails()) {
+            UUID fieldId = treeService.getTreeById(detail.getTreeId()).getFieldId();
+            if (harvestRepository.existsByFieldAndSeasonAndYear(fieldId, season, year)) {
+                throw new BadRequestException("One or more fields already have a harvest for this season");
+            }
+        }
     }
 
     @Override
@@ -84,7 +73,7 @@ public class DefaultHarvestService implements HarvestService {
         if (month >= 9 && month <= 11) return Season.AUTUMN;
         return Season.WINTER;
     }
-    
+
     @Override
     public HarvestDTO updateHarvest(HarvestDTO harvestDTO) {
         if (!harvestRepository.existsById(harvestDTO.getId())) {
@@ -114,15 +103,5 @@ public class DefaultHarvestService implements HarvestService {
         return harvestRepository.findById(harvestId)
                 .map(harvestMapper::toDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Harvest not found with id: " + harvestId));
-    }
-
-    @Override
-    public Boolean isTreeHarvestedInSeason(HarvestDTO harvestDTO) {
-        return harvestRepository.isTreeHarvestedInSeason(harvestDTO.getHarvestDetails().get(0).getTreeId(), getSeasonByDate(harvestDTO.getHarvestDate()));
-    }
-
-    @Override
-    public Boolean existsBySeasonAndYear(HarvestDTO harvestDTO, Integer year) {
-        return harvestRepository.existsBySeasonAndYear(getSeasonByDate(harvestDTO.getHarvestDate()), year);
     }
 }

@@ -1,5 +1,7 @@
 package org.banta.citronix.web.rest;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.dto.harvest.HarvestDTO;
 import org.banta.citronix.dto.harvest.HarvestDetailDTO;
@@ -42,15 +44,5 @@ public class HarvestController {
     public ResponseEntity<Void> deleteHarvest(@PathVariable UUID id) {
         harvestService.deleteHarvest(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/check-tree/{treeId}/season/{season}")
-    public ResponseEntity<Boolean> checkTreeHarvestStatus(
-            @PathVariable UUID treeId,
-            @PathVariable Season season) {
-        HarvestDTO dto = HarvestDTO.builder()
-                .harvestDetails(List.of(HarvestDetailDTO.builder().treeId(treeId).build()))
-                .build();
-        return ResponseEntity.ok(harvestService.isTreeHarvestedInSeason(dto));
     }
 }

@@ -3,6 +3,11 @@ package org.banta.citronix.web.rest;
 import org.banta.citronix.dto.farm.FarmDTO;
 import org.banta.citronix.dto.farm.FarmSearchCriteria;
 import org.banta.citronix.service.FarmService;
+import org.banta.citronix.web.errors.exception.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,13 +47,16 @@ public class FarmController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<?> searchFarms(@RequestBody FarmSearchCriteria criteria) {
+    public Page<FarmDTO> searchFarms(
+            @RequestBody FarmSearchCriteria criteria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "3") int size) {
+
         if (isEmpty(criteria)) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("At least one search criterion must be provided");
+            throw new BadRequestException("At least one search criterion must be provided");
         }
-        return ResponseEntity.ok(farmService.searchFarms(criteria));
+
+        return farmService.searchFarms(criteria, PageRequest.of(page, size));
     }
 
     private boolean isEmpty(FarmSearchCriteria criteria) {

@@ -34,9 +34,9 @@ public class DefaultSaleService implements SaleService {
         if (harvestDTO == null) {
             throw new ResourceNotFoundException("Harvest not found with ID: " + saleDTO.getHarvestId());
         }
-        if (findSaleByHarvestId(saleDTO.getHarvestId())) {
-            throw new BadRequestException("Sale for harvest with ID " + saleDTO.getHarvestId() + " already exists");
-        }
+//        if (findSaleByHarvestId(saleDTO.getHarvestId())) {
+//            throw new BadRequestException("Sale for harvest with ID " + saleDTO.getHarvestId() + " already exists");
+//        }
         // Calculate revenue
         Double revenue = calculateRevenue(saleDTO.getUnitPrice(), harvestDTO.getTotalQuantity());
         saleDTO.setRevenue(revenue);

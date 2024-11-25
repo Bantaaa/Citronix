@@ -16,10 +16,9 @@ public class Sale {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private LocalDate saleDate;
     private Double unitPrice;
     private String customer;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Harvest harvest;
 }

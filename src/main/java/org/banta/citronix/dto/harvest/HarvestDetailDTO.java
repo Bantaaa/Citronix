@@ -16,7 +16,6 @@ public class HarvestDetailDTO {
     @NotNull(message = "Tree ID is required")
     private UUID treeId;
 
-    @NotNull(message = "Quantity is required")
-    @Positive(message = "Quantity must be greater than 0")
+//    @NotNull(message = "Quantity is required")
     private Double quantity;
 }

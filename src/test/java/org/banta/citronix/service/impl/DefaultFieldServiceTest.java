@@ -53,7 +53,7 @@ class DefaultFieldServiceTest {
     void saveField_Success() {
         // Arrange
         Farm farm = new Farm();
-        farm.setArea(10000f);  // Set a valid area (1 hectare in square meters)
+        farm.setArea(10000.0);  // Set a valid area (1 hectare in square meters)
 
         when(farmRepository.findById(any())).thenReturn(Optional.of(farm));
         when(fieldRepository.sumAreaByFarmId(any())).thenReturn(0.0); // Add this for area validation
@@ -97,7 +97,7 @@ class DefaultFieldServiceTest {
         // Arrange
         Field field = new Field();
         Farm farm = new Farm();
-        farm.setArea(10000f);  // 1 hectare
+        farm.setArea(10000.0);  // 1 hectare
         field.setFarm(farm);
         field.setArea(2000.0); // 0.2 hectare
 

@@ -1,5 +1,6 @@
 package org.banta.citronix.web.rest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.dto.sale.SaleDTO;
 import org.banta.citronix.service.SaleService;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/sales")
@@ -19,9 +21,14 @@ public class SaleController {
         return ResponseEntity.ok(saleService.createSale(saleDTO));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteSale(@RequestBody SaleDTO saleDTO) {
-        saleService.deleteSale(saleDTO.getId());
+    @PutMapping("/update")
+    public ResponseEntity<SaleDTO> updateSale(@Valid @RequestBody SaleDTO saleDTO) {
+        return ResponseEntity.ok(saleService.updateSale(saleDTO));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteSale(@PathVariable UUID id) {
+        saleService.deleteSale(id);
         return ResponseEntity.noContent().build();
     }
 

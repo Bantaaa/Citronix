@@ -76,6 +76,11 @@ public class DefaultSaleService implements SaleService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public SaleDTO updateSale( SaleDTO saleDTO) {
+        return createSale(saleDTO);
+    }
+
     private Double calculateRevenue(Double unitPrice, Double quantity) {
         return unitPrice * quantity;
     }

@@ -12,4 +12,6 @@ public interface SaleService {
     void deleteSale(UUID id);
     SaleDTO getSaleById(UUID id);
     List<SaleDTO> getAllSales();
+
+    SaleDTO updateSale(SaleDTO saleDTO);
 }

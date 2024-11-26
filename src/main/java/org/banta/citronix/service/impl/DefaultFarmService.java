@@ -36,45 +36,10 @@ public class DefaultFarmService implements FarmService {
 
     @Override
     public FarmDTO update(FarmDTO farmDTO) {
-        if (farmDTO.getId() == null) {
-            throw new BadRequestException("Farm ID is required for update");
-        }
-
-        Farm existingFarm = farmRepository.findById(farmDTO.getId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Farm not found with id: %s", farmDTO.getId())
-                ));
-
-        // validation
-        if (farmDTO.getArea() != null) {
-            validateArea(farmDTO.getArea());
-        }
-        if (farmDTO.getName() != null) {
-            validateName(farmDTO.getName());
-        }
-        if (farmDTO.getLocation() != null) {
-            validateLocation(farmDTO.getLocation());
-        }
-        if (farmDTO.getDateEstablished() != null) {
-            validateEstablishmentDate(farmDTO.getDateEstablished());
-        }
-
-        // Update only non-null fields
-        if (farmDTO.getArea() != null) {
-            existingFarm.setArea(farmDTO.getArea());
-        }
-        if (farmDTO.getName() != null) {
-            existingFarm.setName(farmDTO.getName());
-        }
-        if (farmDTO.getLocation() != null) {
-            existingFarm.setLocation(farmDTO.getLocation());
-        }
-        if (farmDTO.getDateEstablished() != null) {
-            existingFarm.setDateEstablished(farmDTO.getDateEstablished());
-        }
-
-        existingFarm = farmRepository.save(existingFarm);
-        return farmMapper.toDto(existingFarm);
+        validateFarmData(farmDTO);
+        Farm farm = farmMapper.toEntity(farmDTO);
+        farm = farmRepository.save(farm);
+        return farmMapper.toDto(farm);
     }
 
     @Override

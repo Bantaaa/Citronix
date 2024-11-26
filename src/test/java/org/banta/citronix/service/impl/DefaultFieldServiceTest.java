@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -41,6 +42,7 @@ class DefaultFieldServiceTest {
 
     @BeforeEach
     void setUp() {
+//        MockitoAnnotations.openMocks(this);
         fieldId = UUID.randomUUID();
         fieldDTO = FieldDTO.builder()
                 .id(fieldId)
@@ -112,6 +114,7 @@ class DefaultFieldServiceTest {
         assertNotNull(result);
         verify(fieldRepository).save(any());
     }
+
     @Test
     void deleteField_Success() {
         // Arrange

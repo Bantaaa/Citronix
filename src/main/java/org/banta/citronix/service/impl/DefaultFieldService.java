@@ -3,7 +3,10 @@ package org.banta.citronix.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.banta.citronix.domain.Farm;
 import org.banta.citronix.domain.Field;
+import org.banta.citronix.dto.farm.FarmDTO;
 import org.banta.citronix.dto.field.FieldDTO;
+import org.banta.citronix.mapper.FarmMapper;
+import org.banta.citronix.service.FarmService;
 import org.banta.citronix.web.errors.exception.BadRequestException;
 import org.banta.citronix.web.errors.exception.ResourceNotFoundException;
 import org.banta.citronix.mapper.FieldMapper;
@@ -25,6 +28,8 @@ public class DefaultFieldService implements FieldService {
     private final FieldRepository fieldRepository;
     private final FarmRepository farmRepository;
     private final FieldMapper fieldMapper;
+    private final FarmService farmService;
+    private final FarmMapper farmMapper;
 
     private static final int MAX_FIELDS_PER_FARM = 10;
 
@@ -37,13 +42,11 @@ public class DefaultFieldService implements FieldService {
         validateFieldCount(farm.getId());
         validateFieldArea(request.getArea(), farm);
 
-        Field field = new Field();
-        field.setArea(request.getArea());
-        field.setFarm(farm);
-        field.setTrees(new ArrayList<>());
-
-        field = fieldRepository.save(field);
-        return fieldMapper.toDto(field);
+        return fieldMapper.toDto(fieldRepository.save(Field.builder()
+                .area(request.getArea())
+                .farm(farm)
+                .trees(new ArrayList<>())
+                .build()));
     }
 
     @Transactional(readOnly = true)
@@ -63,19 +66,25 @@ public class DefaultFieldService implements FieldService {
                 .collect(Collectors.toList());
     }
 
-    public FieldDTO updateField(FieldDTO fieldDTO) {
-        Field field = fieldRepository.findById(fieldDTO.getId())
+    public FieldDTO updateField(FieldDTO request) {
+        FarmDTO farm = getFarmByFieldId(request.getId());
+        validateFieldCount(farm.getId());
+        validateFieldArea(request.getArea(), farmMapper.toEntity(farm));
+
+        return fieldMapper.toDto(fieldRepository.save(Field.builder()
+                .area(request.getArea())
+                .farm(farmMapper.toEntity(farm))
+                .build()));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public FarmDTO getFarmByFieldId(UUID fieldId) {
+        Farm farm = fieldRepository.findFarmByFieldId(fieldId)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Field not found with id: %s", fieldDTO.getId())
+                        String.format("Farm not found for field id: %s", fieldId)
                 ));
-
-        if (fieldDTO.getArea() != null && !fieldDTO.getArea().equals(field.getArea())) {
-            validateFieldArea(fieldDTO.getArea(), field.getFarm());
-            field.setArea(fieldDTO.getArea());
-        }
-
-        field = fieldRepository.save(field);
-        return fieldMapper.toDto(field);
+        return farmMapper.toDto(farm);
     }
 
     public void deleteField(UUID id) {

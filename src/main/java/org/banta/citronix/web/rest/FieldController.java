@@ -32,7 +32,7 @@ public class FieldController {
         return ResponseEntity.ok(fieldService.getAllFieldsByFarmId(farmId));
     }
 
-    @PutMapping("/update/")
+    @PutMapping("/update")
     public ResponseEntity<FieldDTO> updateField(@Valid @RequestBody FieldDTO request) {
         return ResponseEntity.ok(fieldService.updateField(request));
     }

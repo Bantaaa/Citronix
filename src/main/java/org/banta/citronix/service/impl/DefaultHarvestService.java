@@ -6,6 +6,7 @@ import org.banta.citronix.domain.HarvestDetail;
 import org.banta.citronix.domain.enums.Season;
 import org.banta.citronix.dto.harvest.HarvestDTO;
 import org.banta.citronix.dto.harvest.HarvestDetailDTO;
+import org.banta.citronix.dto.tree.TreeDTO;
 import org.banta.citronix.mapper.HarvestMapper;
 import org.banta.citronix.repository.HarvestRepository;
 import org.banta.citronix.service.HarvestService;
@@ -52,6 +53,15 @@ public class DefaultHarvestService implements HarvestService {
         if (harvestDTO.getHarvestDetails() == null || harvestDTO.getHarvestDetails().isEmpty()) {
             throw new BadRequestException("Harvest details are required");
         }
+
+        List<HarvestDetailDTO> details = harvestDTO.getHarvestDetails();
+
+        details.forEach(detail -> {
+            if (detail.getQuantity() == null || detail.getQuantity() <= 0) {
+                TreeDTO tree = treeService.getTreeById(detail.getTreeId());
+                detail.setQuantity(tree.getProductivity()/ 4);
+            }
+        });
 
         Season season = getSeasonByDate(harvestDTO.getHarvestDate());
         int year = harvestDTO.getHarvestDate().getYear();

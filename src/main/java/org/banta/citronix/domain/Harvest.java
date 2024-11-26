@@ -31,6 +31,6 @@ public class Harvest {
 
     private Double totalQuantity;
 
-    @OneToOne(mappedBy = "harvest")
-    private Sale sale;
+    @OneToMany(mappedBy = "harvest")
+    private List<Sale> sales = new ArrayList<>();
 }

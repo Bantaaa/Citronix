@@ -47,28 +47,7 @@ cd citronix
 - PostgreSQL
 
 ## 📚 Documentation
-
-### API Endpoints
-
-#### Farms (`/api/v1/farms`)
-```
-POST   /create         # Create farm
-PUT    /update        # Update farm
-DELETE /delete/{id}    # Delete farm
-GET    /details/{id}   # Get farm details
-POST   /search        # Search farms
-```
-
-#### Fields (`/api/v1/fields`)
-```
-POST   /save          # Create field
-GET    /find/{id}     # Get field
-GET    /farm/{farmId} # List fields
-PUT    /update        # Update field
-DELETE /delete/{id}   # Delete field
-```
-
-See [API Documentation](docs/API.md) for complete endpoint details.
+See [API Documentation](https://documenter.getpostman.com/view/32810253/2sAYBUDsK7) for complete endpoint details.
 
 ## 🔧 Configuration
 

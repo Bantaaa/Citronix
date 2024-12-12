@@ -1,5 +1,3 @@
-Presentation Link : [Click Here](https://slidesgo.com/editor/share/9d8f0ec6-bf68-4719-8bf5-67c5ed12206f?embed=0&expires=1732702845&signature=94eb99808dde4391e747c08305f847e1a4bfaeb5fa1dfbe2804e1d22f5e52434)
-
 
 UML CLASS DIAGRAM LINK : [Click Here](https://excalidraw.com/#json=9akWm_jkZ9aTkU82KToEU,R9miCo6M3jH2pF74JLTS3A)
 

@@ -13,7 +13,7 @@ A Spring Boot application for managing citrus farms, tracking harvests, and hand
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/citronix.git
+git clone https://github.com/bantaaa/citronix.git
 
 # Navigate to project directory
 cd citronix
